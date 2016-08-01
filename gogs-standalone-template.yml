@@ -92,5 +92,4 @@ objects:
 parameters: 
   - name: "APPLICATION_DOMAIN"
     displayName: "Application Hostname"
-    description: "The exposed hostname that will route to the Gogs service, if left blank a value will be defaulted."
-    value: "gogs"
+    description: "The exposed hostname that will route to the Gogs service"
