@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Template
 metadata:
-  name: gogs-standalone-template
+  name: gogs-template
   annotations:
     description: "Deploy a git server in minutes: gogs!"
     tags: quickstart,instant-app,git,gogs
@@ -10,21 +10,21 @@ objects:
   kind: Route
   metadata:
     labels:
-      app: gogs-standalone
-    name: gogs-standalone
+      app: gogs
+    name: gogs
   spec:
     host: "${APPLICATION_DOMAIN}"
     port:
       targetPort: 3000
     to:
       kind: Service
-      name: gogs-standalone
+      name: gogs
 - apiVersion: v1
   kind: Service
   metadata:
     labels:
-      app: gogs-standalone
-    name: gogs-standalone
+      app: gogs
+    name: gogs
   spec:
     ports:
     - name: 3000-tcp
@@ -32,21 +32,21 @@ objects:
       protocol: TCP
       targetPort: 3000
     selector:
-      app: gogs-standalone
-      deploymentconfig: gogs-standalone
+      app: gogs
+      deploymentconfig: gogs
     sessionAffinity: None
     type: ClusterIP
 - apiVersion: v1
   kind: DeploymentConfig
   metadata:
     labels:
-      app: gogs-standalone
-    name: gogs-standalone
+      app: gogs
+    name: gogs
   spec:
     replicas: 1
     selector:
-      app: gogs-standalone
-      deploymentconfig: gogs-standalone
+      app: gogs
+      deploymentconfig: gogs
     strategy:
       resources: {}
       rollingParams:
@@ -61,13 +61,13 @@ objects:
         annotations:
           openshift.io/container.gogs.image.entrypoint: '["docker/start.sh","/bin/s6-svscan","/app/gogs/docker/s6/"]'
         labels:
-          app: gogs-standalone
-          deploymentconfig: gogs-standalone
+          app: gogs
+          deploymentconfig: gogs
       spec:
         containers:
         - image: gogs/gogs
           imagePullPolicy: IfNotPresent
-          name: gogs-standalone
+          name: gogs
           ports:
           - containerPort: 3000
             protocol: TCP
@@ -89,7 +89,7 @@ objects:
           name: gogs-volume
     triggers:
     - type: ConfigChange
-parameters: 
+parameters:
   - name: "APPLICATION_DOMAIN"
     displayName: "Application Hostname"
     description: "The exposed hostname that will route to the Gogs service"
